@@ -12,16 +12,13 @@
 class Climber {
 public:
   //ClimberSubsystem();
-  void RaiseLeft();
   void ClimberPIDInit();
   void ClimberDashRead();
   void ClimberDashInit();
-  void RaiseRight();
-  void LowerLeft();
-  void LowerRight();
-  void RotateLeft(char dirL); // f = forwards, b = backwards. All lowercase
-  void RotateRight(char dirR);
-
+  void ExtendLeft(double step);
+  void ExtendRight(double step);
+  void RotateLeft(double step);
+  void RotateRight(double step);
 
 private:
   frc::SendableChooser<std::string> m_chooser;
@@ -66,11 +63,11 @@ private:
 
   //vars
 
-  double m_forthSetPointR, m_forthSetPointL = 0.0;
-  double m_backSetPointR, m_backSetPointL = 0.0;
+  double m_rotatePointR = 0.0;
+  double m_rotatePointL = 0.0;
 
-  double m_climbExtendPointR, m_climbExtendPointL = 0.0;
-  double m_climbLowerPointR, m_climbLowerPointL = 0.0;
+  double m_climbExtendPointR = 0.0;
+  double m_climbExtendPointL = 0.0;
 };
 
 

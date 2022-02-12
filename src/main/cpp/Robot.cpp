@@ -185,6 +185,7 @@ void Robot::TeleopPeriodic() {
 
 
  //uptake
+ /*
  if (m_stick.GetAButtonPressed()) {
    if (uptakeBool == true) {
      //stop uptake
@@ -196,6 +197,24 @@ void Robot::TeleopPeriodic() {
      m_take.DeployIntake();
      uptakeBool = true;
    }
+ }*/
+
+
+ // climber rotate forward
+ if (m_stick.GetBButtonPressed()) {
+   m_climber.RotateRight(1.0);
+ }
+ // climber rotate back
+ if (m_stick.GetXButtonPressed()) {
+   m_climber.RotateRight(-1.0);
+ }
+ // climber up
+ if (m_stick.GetYButtonPressed()) {
+   m_climber.ExtendRight(1.0);
+ }
+ // climber down
+ if (m_stick.GetAButtonPressed()) {
+   m_climber.ExtendRight(-1.0);
  }
 
 //Possibly uneeded

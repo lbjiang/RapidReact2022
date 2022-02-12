@@ -9,48 +9,33 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 
 
-void Climber::RaiseLeft(){
+void Climber::ExtendLeft(double step){
   //m_leftClimberExtender.Set(m_leftClimberExtendPIDController.Calculate(m_leftClimberExtenderEncoder.GetIntegratedSensorPosition(), climbExtendPointL)); //not sure whether to do position or absolute position
   //  m_leftClimberExtendPIDController.SetSetpoint(climbExtendPointL);
+  m_climbExtendPointL += step;
   m_leftClimberExtender.Set(ControlMode::MotionMagic, m_climbExtendPointL*2048.0);
+  std::cout << "Extend Left:" << m_climbExtendPointL << "\n";
 }
 
-void Climber::RaiseRight(){
+void Climber::ExtendRight(double step){
    //m_rightClimberExtender.Set(m_rightClimberExtendPIDController.Calculate(m_rightClimberExtenderEncoder.GetIntegratedSensorPosition(), climbExtendPointR));
   //  m_rightClimberExtendPIDController.SetSetpoint(climbExtendPointR);
+  m_climbExtendPointR += step;
   m_rightClimberExtender.Set(ControlMode::MotionMagic, m_climbExtendPointR*2048.0);
+  std::cout << "Extend Right:" << m_climbExtendPointR << "\n";
 }
 
-void Climber::LowerLeft(){
-   //m_leftClimberExtender.Set(m_leftClimberExtendPIDController.Calculate(m_leftClimberExtenderEncoder.GetIntegratedSensorPosition(), climbLowerPointL));
-  // m_leftClimberExtendPIDController.SetSetpoint(climbLowerPointL);
-  m_leftClimberExtender.Set(ControlMode::MotionMagic, m_climbLowerPointL*2048.0);
+void Climber::RotateLeft(double step){
+    m_rotatePointL += step;
+    m_leftClimberRotatePIDController.SetReference(m_rotatePointL, rev::CANSparkMax::ControlType::kPosition);
+    std::cout << "Rotate Left:" << m_rotatePointL << "\n";
 }
 
-void Climber::LowerRight(){
-   //m_rightClimberExtender.Set(m_rightClimberExtendPIDController.Calculate(m_rightClimberExtenderEncoder.GetIntegratedSensorPosition(), climbLowerPointR));
- //  m_rightClimberExtendPIDController.SetSetpoint(climbLowerPointR);
- m_rightClimberExtender.Set(ControlMode::MotionMagic, m_climbLowerPointR*2048.0);
+void Climber::RotateRight(double step){
+    m_rotatePointR += step;
+    m_rightClimberRotatePIDController.SetReference(m_rotatePointR, rev::CANSparkMax::ControlType::kPosition);
+    std::cout << "Rotate Right:" << m_rotatePointR << "\n";
 }
-
-
-void Climber::RotateLeft(char dirL){
-  if (dirL == 'f'){ //forwards
-    m_leftClimberRotatePIDController.SetReference(m_forthSetPointL, rev::CANSparkMax::ControlType::kSmartMotion);
-  }
-  if (dirL == 'b'){ //backwards
-    m_leftClimberRotatePIDController.SetReference(m_backSetPointL, rev::CANSparkMax::ControlType::kSmartMotion);
-  }
-}
-void Climber::RotateRight(char dirR){
-  if (dirR == 'f'){ //forwards
-    m_rightClimberRotatePIDController.SetReference(m_forthSetPointR, rev::CANSparkMax::ControlType::kSmartMotion);
-  }
-  if (dirR == 'b'){ //backwards
-    m_rightClimberRotatePIDController.SetReference(m_backSetPointR, rev::CANSparkMax::ControlType::kSmartMotion);
-  }
-}
-
 
 void Climber::ClimberDashInit(){
    //falcons
@@ -60,8 +45,6 @@ void Climber::ClimberDashInit(){
   frc::SmartDashboard::PutNumber("Left Climber Extend FF Gain", m_leftClimberExtendCoeff.kFF);
   frc::SmartDashboard::PutNumber("Left Climber Extend Min Output", m_leftClimberExtendCoeff.kMinOutput);
   frc::SmartDashboard::PutNumber("Left Climber Extend Max Output", m_leftClimberExtendCoeff.kMaxOutput);
-  frc::SmartDashboard::PutNumber("Left Climber Extend Point", m_climbExtendPointL);
-  frc::SmartDashboard::PutNumber("Left Climber Lower Point", m_climbLowerPointL);
 
   frc::SmartDashboard::PutNumber("Right Climber Extend P Gain", m_rightClimberExtendCoeff.kP);
   frc::SmartDashboard::PutNumber("Right Climber Extend I Gain", m_rightClimberExtendCoeff.kI);
@@ -69,8 +52,6 @@ void Climber::ClimberDashInit(){
   frc::SmartDashboard::PutNumber("Right Climber Extend FF Gain", m_rightClimberExtendCoeff.kFF);
   frc::SmartDashboard::PutNumber("Right Climber Extend Min Output", m_rightClimberExtendCoeff.kMinOutput);
   frc::SmartDashboard::PutNumber("Right Climber Extend Max Output", m_rightClimberExtendCoeff.kMaxOutput);
-  frc::SmartDashboard::PutNumber("Right Climber Extend Point", m_climbExtendPointR);
-  frc::SmartDashboard::PutNumber("Right Climber Lower Point", m_climbLowerPointR);
 
   //rotate climber
   frc::SmartDashboard::PutNumber("Left Climber Rotate P Gain", m_leftClimberExtendCoeff.kP);
@@ -78,16 +59,12 @@ void Climber::ClimberDashInit(){
   frc::SmartDashboard::PutNumber("Left Climber Rotate D Gain", m_leftClimberExtendCoeff.kD);
   frc::SmartDashboard::PutNumber("Left Climber Rotate Max Output", m_leftClimberExtendCoeff.kMaxOutput);
   frc::SmartDashboard::PutNumber("Left Climber Rotate Min Output", m_leftClimberExtendCoeff.kMinOutput);
-  frc::SmartDashboard::PutNumber("Left Climber Rotate Forth Point", m_forthSetPointL);
-  frc::SmartDashboard::PutNumber("Left Climber Rotate Back Point", m_backSetPointL);
 
   frc::SmartDashboard::PutNumber("Right Climber Rotate P Gain", m_rightClimberExtendCoeff.kP);
   frc::SmartDashboard::PutNumber("Right Climber Rotate I Gain", m_rightClimberExtendCoeff.kI);
   frc::SmartDashboard::PutNumber("Right Climber Rotate D Gain", m_rightClimberExtendCoeff.kD);
   frc::SmartDashboard::PutNumber("Right Climber Rotate Max Output", m_rightClimberExtendCoeff.kMaxOutput);
   frc::SmartDashboard::PutNumber("Right Climber Rotate Min Output", m_rightClimberExtendCoeff.kMinOutput);
-  frc::SmartDashboard::PutNumber("Right Climber Rotate Forth Point", m_forthSetPointR);
-  frc::SmartDashboard::PutNumber("Right Climber Rotate Back Point", m_backSetPointR);
 }
 
 void Climber::ClimberDashRead(){
@@ -102,10 +79,7 @@ void Climber::ClimberDashRead(){
   std::cout << "Read Dashboard Right Climber Rotate d gain: " << d << "\n";
   min = frc::SmartDashboard::GetNumber("Right Climber Rotate Min Output", 0.0);
   max = frc::SmartDashboard::GetNumber("Right Climber Rotate Max Output", 0.0);
-  m_forthSetPointL = frc::SmartDashboard::GetNumber("Left Climber Rotate Forth Point", 0.0);
-  m_forthSetPointR = frc::SmartDashboard::GetNumber("Right Climber Rotate Forth Point", 0.0);
-  m_backSetPointL = frc::SmartDashboard::GetNumber("Left Climber Rotate Back Point", 0.0);
-  m_backSetPointR = frc::SmartDashboard::GetNumber("Right Climber Rotate Back Point", 0.0);
+
 
   if ((p != m_rightClimberRotateCoeff.kP)) { m_rightClimberRotatePIDController.SetP(p);m_rightClimberRotateCoeff.kP = p; }
   if ((i != m_rightClimberRotateCoeff.kI)) { m_rightClimberRotatePIDController.SetI(i); m_rightClimberRotateCoeff.kI = i; }
@@ -139,8 +113,6 @@ void Climber::ClimberDashRead(){
   m_leftClimberExtendCoeff.kFF  = frc::SmartDashboard::GetNumber("Left Climber Extend FF Gain", 0.0);
   m_leftClimberExtendCoeff.kMinOutput = frc::SmartDashboard::GetNumber("Left Climber Extend Min Output", 0.0);
   m_leftClimberExtendCoeff.kMaxOutput = frc::SmartDashboard::GetNumber("Left Climber Extend Max Output", 0.0);
-  m_climbExtendPointL = frc::SmartDashboard::GetNumber("Left Climber Extend Point", 0.0);
-  m_climbLowerPointL = frc::SmartDashboard::GetNumber("Left Climber Lower Point", 0.0);
 
   m_rightClimberExtendCoeff.kP   = frc::SmartDashboard::GetNumber("Right Climber Extend P Gain", 0.0);
   m_rightClimberExtendCoeff.kI   = frc::SmartDashboard::GetNumber("Right Climber Extend I Gain", 0.0);
@@ -148,10 +120,6 @@ void Climber::ClimberDashRead(){
   m_rightClimberExtendCoeff.kFF  = frc::SmartDashboard::GetNumber("Right Climber Extend FF Gain", 0.0);
   m_rightClimberExtendCoeff.kMinOutput = frc::SmartDashboard::GetNumber("Right Climber Extend Min Output", 0.0);
   m_rightClimberExtendCoeff.kMaxOutput = frc::SmartDashboard::GetNumber("Right Climber Extend Max Output", 0.0);
-  m_climbExtendPointR = frc::SmartDashboard::GetNumber("Right Climber Extend Point", 0.0);
-  m_climbLowerPointR = frc::SmartDashboard::GetNumber("Right Climber Lower Point", 0.0);
-
-  
 }
 
 void Climber::ClimberPIDInit(){
@@ -224,5 +192,12 @@ void Climber::ClimberPIDInit(){
     m_leftClimberExtender.SetSelectedSensorPosition(0, 0, 10);
 
     m_rightClimberExtender.SetSelectedSensorPosition(0, 0, 10);
+
+    std::cout << "Rotate coeff: "
+              << m_rightClimberRotateCoeff.kP << " "
+              << m_rightClimberRotateCoeff.kI << " "
+              << m_rightClimberRotateCoeff.kD << " "
+              << m_rightClimberRotateCoeff.kMinOutput << " "
+              << m_rightClimberRotateCoeff.kMaxOutput << "\n";
 
 }

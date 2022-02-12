@@ -193,11 +193,33 @@ void Climber::ClimberPIDInit(){
 
     m_rightClimberExtender.SetSelectedSensorPosition(0, 0, 10);
 
-    std::cout << "Rotate coeff: "
+    std::cout << "Right Rotate coeff: "
               << m_rightClimberRotateCoeff.kP << " "
               << m_rightClimberRotateCoeff.kI << " "
               << m_rightClimberRotateCoeff.kD << " "
               << m_rightClimberRotateCoeff.kMinOutput << " "
               << m_rightClimberRotateCoeff.kMaxOutput << "\n";
 
+   std::cout << "Left Rotate coeff: "
+              << m_leftClimberRotateCoeff.kP << " "
+              << m_leftClimberRotateCoeff.kI << " "
+              << m_leftClimberRotateCoeff.kD << " "
+              << m_leftClimberRotateCoeff.kMinOutput << " "
+              << m_leftClimberRotateCoeff.kMaxOutput << "\n";
+
+ std::cout << "Left Extend coeff: "
+              << m_leftClimberExtendCoeff.kP << " "
+              << m_leftClimberExtendCoeff.kI << " "
+              << m_leftClimberExtendCoeff.kD << " "
+              << m_leftClimberExtendCoeff.kMinOutput << " "
+              << m_leftClimberExtendCoeff.kMaxOutput << "\n";       
+
+ std::cout << "Right Extend coeff: "
+              << m_rightClimberExtendCoeff.kP << " "
+              << m_rightClimberExtendCoeff.kI << " "
+              << m_rightClimberExtendCoeff.kD << " "
+              << m_rightClimberExtendCoeff.kMinOutput << " "
+              << m_rightClimberExtendCoeff.kMaxOutput << "\n";        
+
 }
+

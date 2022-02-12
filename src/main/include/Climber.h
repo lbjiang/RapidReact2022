@@ -21,7 +21,7 @@ public:
   void RotateRight(double step);
 
 private:
-  frc::SendableChooser<std::string> m_chooser;
+  //frc::SendableChooser<std::string> m_chooser;
 
 
   // Stolen from Robot.h
@@ -69,5 +69,3 @@ private:
   double m_climbExtendPointR = 0.0;
   double m_climbExtendPointL = 0.0;
 };
-
-

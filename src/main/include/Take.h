@@ -31,6 +31,12 @@ public:
   void TestDashInit();
   void TestDashRead();
 
+  // for solely testing motor function
+  void EngageIntakeRotation(double throttle);
+  void EngageIntakeSpin(double throttle);
+  void EngageUptake(double throttle);
+  void EngageWaitingRoom(double throttle); 
+
   enum BallColor
   {
     blueBall,

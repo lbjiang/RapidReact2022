@@ -341,3 +341,20 @@ void Take::ReadEncoders() {
   frc::SmartDashboard::PutNumber("Rotate Intake Position: ", m_rotateIntakeEncoder.GetPosition()); 
   
 }
+
+//for solely testing motor function
+void Take::EngageIntakeRotation(double throttle) {
+  m_rotateIntakeMotor.Set(throttle);
+}
+
+void Take::EngageIntakeSpin(double throttle) {
+  m_spinIntakeMotor.Set(throttle);
+}
+
+void Take::EngageUptake(double throttle) {
+  m_uptakeMotor.Set(throttle);
+}
+
+void Take::EngageWaitingRoom(double throttle) {
+  m_waitingRoomMotor.Set(throttle);
+}

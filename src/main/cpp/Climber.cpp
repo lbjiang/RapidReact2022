@@ -365,6 +365,7 @@ void Climber::Run() {
     case 2:
     //Ratchet disengages, set soft limits for each case??
       // Extend left arm (could possibly merge w/ case 1), driver then drives up to bar 
+      EngageLeft(0.5);
       
       break;
 
@@ -514,11 +515,18 @@ void Climber::TestR() {
   RotateRight(m_rotationR);
 }
 
+// rotates climber arms by throttle
 void Climber::RotateRThrottle(double throttle) {
   m_rightClimberRotationNeo.Set(throttle); 
+}
+
+void Climber::RotateLThrottle(double throttle) {
+
+  m_leftClimberRotationNeo.Set(throttle);
 }
 
 //automatically sets climber to a certain stage (e.g. case 1, 2, 3)
 void Climber::SetPhase(int phase) {
   m_phase = phase; 
+  std::cout << "Phase: " << m_phase << "\n";
 }

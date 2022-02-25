@@ -23,14 +23,15 @@ void Robot::RobotInit() {
   m_odometry = new frc::DifferentialDriveOdometry(frc::Rotation2d(0_deg));
   
 
-  //InitializePIDControllers(); 
+  InitializePIDControllers(); 
   //InitializeDashboard();
 
 //Test
+/*
 m_climber.ClimberPIDInit();
   m_climber.TestDashInit();
   m_take.TestDashInit();
-
+*/
   m_climber.InitializeEncoders();
   m_take.InitializeEncoders(); 
 
@@ -169,7 +170,7 @@ void Robot::TeleopPeriodic() {
   double throttleExp = a * pow(m_stick.GetLeftTriggerAxis(), 4) + b * pow(m_stick.GetLeftTriggerAxis(), 1.48)-a * pow(m_stick.GetRightTriggerAxis(), 4) + b * pow(m_stick.GetRightTriggerAxis(), 1.48);
   //double turnInput = pow(m_stick.GetLeftX()*m_turnFactor,1.72) - pow(m_stick.GetLeftY()*m_turnFactor,1.72);
   double turnInput = m_stick.GetLeftX() - m_stick.GetLeftY();
-/*
+
   // Shooter
   if (m_stick.GetRightBumper()) {
     m_shooter.Fire();
@@ -180,46 +181,6 @@ void Robot::TeleopPeriodic() {
   if (m_stick.GetRightBumperReleased()) {
     m_shooter.Reset();
   }
-*/
-m_drive.ArcadeDrive(throttle, turnInput);
-
-  //climber testing
-  //fully manual
-  if (m_stick.GetLeftBumper()) {
-  m_climber.TestL();
-}
-else {
-  m_climber.RotateLeft(0.0);
-}
-
-if (m_stick.GetRightBumper()) {
-  m_climber.TestR();
-  //m_climber.RotateRThrottle(0.5);
-}
-else {
- m_climber.RotateRight(0.0);
- // m_climber.RotateRThrottle(0.0);
-}
-
-if (m_stick.GetXButton()) {
-  m_climber.EngageLeft(0.5);
-}
-else if (m_stick.GetYButton()) {
-  m_climber.EngageLeft(-0.5);
-}
-else {
-  m_climber.EngageLeft(0.0);
-}
-
-if (m_stick.GetBButton()) {
-  m_climber.EngageRight(0.5);
-}
-else if (m_stick.GetAButton()) {
-  m_climber.EngageRight(-0.5);
-}
-else {
-  m_climber.EngageRight(0.0);
-}
 
 }
 
@@ -237,23 +198,89 @@ void Robot::TestInit() {
 
 // This method is called every 20ms (by default) during testing
 void Robot::TestPeriodic() {
-  m_climber.Run();
-if (m_stick.GetXButtonReleased()) {
-  m_climber.SetPhase(1);
+  //JOYSTICK 1 (also known as joystick 0)
+  // drive controls
+  double throttle = -m_stick.GetLeftTriggerAxis() + m_stick.GetRightTriggerAxis(); 
+  double turnInput = m_stick.GetLeftX() - m_stick.GetLeftY(); 
+  m_drive.ArcadeDrive(throttle, turnInput); 
+
+  // intake, uptake
+if (m_stick.GetLeftBumper()) {
+  m_take.EngageIntakeRotation(0.1);
+}
+else {
+  m_take.EngageIntakeRotation(0.0);
 }
 
-if (m_stick.GetYButtonReleased()) {
-  m_climber.SetPhase(2);
+if (m_stick.GetLeftStickButton()) {
+  m_take.EngageIntakeSpin(0.5);
+}
+else {
+  m_take.EngageIntakeSpin(0.0);
 }
 
-if (m_stick.GetBButtonReleased()) {
-  m_climber.SetPhase(3);
+if (m_stick.GetRightBumper()) {
+  m_take.EngageUptake(-1.0);
+} 
+else {
+  m_take.EngageUptake(0.0);
 }
 
-if (m_stick.GetAButtonReleased()) {
-  m_climber.SetPhase(4);
+if (m_stick.GetRightStickButton()) {
+  m_take.EngageWaitingRoom(1.0);
+}
+else {
+  m_take.EngageWaitingRoom(0.0);
+}
+//JOYSTICK 2 (also known as joystick 1)
+  // climber extension/retraction
+  if (m_stick_climb.GetYButton()) {
+    // left climber extends
+  m_climber.EngageLeft(0.5);
+}
+ else if (m_stick_climb.GetXButton()) {
+   // left climber retracts
+  m_climber.EngageLeft(-0.5);
+}
+ else {
+  m_climber.EngageLeft(0.0);
 }
 
+ if (m_stick_climb.GetBButton()) {
+   // right climber extends
+  m_climber.EngageRight(0.5);
+}
+ else if (m_stick_climb.GetAButton()) {
+   // right climber retracts
+  m_climber.EngageRight(-0.5);
+}
+else {
+  m_climber.EngageRight(0.0);
+}
+
+// climber rotation (directions could be reversed)
+
+if (m_stick_climb.GetLeftBumper()) {
+  //rotates forward
+  m_climber.RotateLThrottle(0.25);
+} 
+else if (m_stick_climb.GetLeftStickButton()) {
+  //rotates reverse 
+  m_climber.RotateLThrottle(-0.25);
+}
+else {
+  m_climber.RotateLThrottle(0.0);
+}
+
+if (m_stick_climb.GetRightBumper()) {
+  m_climber.RotateRThrottle(0.25);
+}
+else if (m_stick_climb.GetRightStickButton()) {
+  m_climber.RotateRThrottle(-0.25);
+}
+else {
+  m_climber.RotateRThrottle(0.0);
+}
 }
 
 

@@ -37,9 +37,10 @@ public:
   void TestL();
   void TestR();
 
-  void SetPhase(int phase);
+  void SetPhase(int phase); //might be testing might be final
 
   void RotateRThrottle(double throttle);
+  void RotateLThrottle(double throttle);
   
 
 private:
